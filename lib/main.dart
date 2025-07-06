@@ -11,7 +11,6 @@ import 'screens/main/login screens/loginform.dart';
 
 void main() {
   runApp(const CarWashApp());
-  //
 }
 
 class CarWashApp extends StatelessWidget {
@@ -56,7 +55,6 @@ class CarWashApp extends StatelessWidget {
         shadowColor: Colors.black.withOpacity(0.2),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-
       listTileTheme: ListTileThemeData(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         tileColor: colorScheme.surfaceContainerHighest,
@@ -81,14 +79,74 @@ class CarWashApp extends StatelessWidget {
         title: 'Car Wash Booking',
         theme: theme,
         debugShowCheckedModeBanner: false,
-        initialRoute: '/',
+        home: const AuthWrapper(), // Changed from initialRoute
         routes: {
-          '/': (context) => const Splash(),
+          '/': (context) => const AuthWrapper(),
           '/home': (context) => const HomePage(),
           '/login': (context) => const LoginForm(),
           '/cart': (context) => const CartPage(),
         },
       ),
     );
+  }
+}
+
+// New AuthWrapper widget to handle authentication state
+class AuthWrapper extends StatefulWidget {
+  const AuthWrapper({super.key});
+
+  @override
+  State<AuthWrapper> createState() => _AuthWrapperState();
+}
+
+class _AuthWrapperState extends State<AuthWrapper> {
+  bool _isLoading = true;
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthStatus();
+  }
+
+  Future<void> _checkAuthStatus() async {
+    try {
+      final loggedIn = await isLoggedIn();
+      if (loggedIn) {
+        // Verify token is still valid
+        final tokenValid = await verifyToken();
+        setState(() {
+          _isLoggedIn = tokenValid;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoggedIn = false;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isLoggedIn = false;
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (_isLoggedIn) {
+      return const HomePage();
+    } else {
+      return const Splash();
+    }
   }
 }

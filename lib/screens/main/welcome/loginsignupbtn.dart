@@ -1,9 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/main/login%20screens/loginform.dart';
 import 'package:flutter_application_1/screens/main/signupscreens/form.dart';
+import 'package:flutter_application_1/api_service.dart';
 
-class LoginAndSignupBtn extends StatelessWidget {
+class LoginAndSignupBtn extends StatefulWidget {
   const LoginAndSignupBtn({super.key});
+
+  @override
+  State<LoginAndSignupBtn> createState() => _LoginAndSignupBtnState();
+}
+
+class _LoginAndSignupBtnState extends State<LoginAndSignupBtn> {
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final loggedIn = await isLoggedIn();
+    setState(() {
+      _isLoggedIn = loggedIn;
+    });
+
+    if (loggedIn) {
+      // Navigate to home if already logged in
+      Navigator.of(context).pushReplacementNamed('/home');
+    }
+  }
 
   void _showLoginPopup(BuildContext context) {
     showDialog(
@@ -49,6 +75,10 @@ class LoginAndSignupBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoggedIn) {
+      return const SizedBox.shrink(); // Hide buttons if already logged in
+    }
+
     return Column(
       children: [
         ElevatedButton(
