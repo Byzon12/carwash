@@ -11,7 +11,8 @@ class LoginScreen extends StatelessWidget {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16)),
+            borderRadius: BorderRadius.circular(16),
+          ),
           contentPadding: const EdgeInsets.all(20),
           content: SingleChildScrollView(
             child: ConstrainedBox(
@@ -28,20 +29,14 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final loginButton = ElevatedButton(
       onPressed: () => _showLoginPopup(context),
-      child: const Text("Login"),
       style: ElevatedButton.styleFrom(
         minimumSize: const Size(300, 56),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(32),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         backgroundColor: Colors.blue,
       ),
+      child: const Text("Login"),
     );
 
-    return Scaffold(
-      body: Center(
-        child: loginButton,
-      ),
-    );
+    return Scaffold(body: Center(child: loginButton));
   }
 }

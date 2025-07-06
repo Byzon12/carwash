@@ -6,18 +6,17 @@ class BookingPopup extends StatefulWidget {
   final List<CartItem> cartItems;
   final VoidCallback onComplete;
   const BookingPopup({
-     required this.cartItems,
+    required this.cartItems,
     required this.onComplete,
-    Key? key,
-    
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<BookingPopup> createState() => _BookingPopupState();
 }
 
 class _BookingPopupState extends State<BookingPopup> {
-  final _formKey = GlobalKey<FormState>();  
+  final _formKey = GlobalKey<FormState>();
 
   DateTime? _selectedDateTime;
   String? _paymentMethod;
@@ -28,10 +27,11 @@ class _BookingPopupState extends State<BookingPopup> {
 
   bool _isProcessingPayment = false;
 
-  
   String? _validateMpesaNumber(String? value) {
     final trimmed = value?.trim() ?? '';
-    final regExp = RegExp(r'^254\d{9}$'); // Must start with 254 and 9 digits follow
+    final regExp = RegExp(
+      r'^254\d{9}$',
+    ); // Must start with 254 and 9 digits follow
 
     if (trimmed.isEmpty) {
       return 'Please enter your Mpesa phone number';
@@ -82,30 +82,32 @@ class _BookingPopupState extends State<BookingPopup> {
 
     await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Mpesa Payment'),
-        content: Text(
-          'Payment request sent to ${_mpesaNumberController.text.trim()}',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Mpesa Payment'),
+            content: Text(
+              'Payment request sent to ${_mpesaNumberController.text.trim()}',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
   Future<void> _submitBooking() async {
-    
     if (!_formKey.currentState!.validate()) {
-      return; 
+      return;
     }
 
     if (_selectedDateTime == null || _paymentMethod == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select date/time and payment method')),
+        const SnackBar(
+          content: Text('Please select date/time and payment method'),
+        ),
       );
       return;
     }
@@ -113,7 +115,9 @@ class _BookingPopupState extends State<BookingPopup> {
     if ((_paymentMethod == 'Visa' || _paymentMethod == 'PayPal') &&
         _cardNumberController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter your $_paymentMethod card number')),
+        SnackBar(
+          content: Text('Please enter your $_paymentMethod card number'),
+        ),
       );
       return;
     }
@@ -122,10 +126,9 @@ class _BookingPopupState extends State<BookingPopup> {
       await _processMpesaPayment();
     }
 
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Booking successful!')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Booking successful!')));
 
     Navigator.pop(context);
   }
@@ -139,14 +142,15 @@ class _BookingPopupState extends State<BookingPopup> {
 
   @override
   Widget build(BuildContext context) {
-    final dateTimeText = _selectedDateTime == null
-        ? 'Select Date & Time'
-        : DateFormat('yyyy-MM-dd – HH:mm').format(_selectedDateTime!);
+    final dateTimeText =
+        _selectedDateTime == null
+            ? 'Select Date & Time'
+            : DateFormat('yyyy-MM-dd – HH:mm').format(_selectedDateTime!);
 
     return Padding(
       padding: const EdgeInsets.all(12),
       child: SingleChildScrollView(
-        child: Form(  
+        child: Form(
           key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -159,7 +163,10 @@ class _BookingPopupState extends State<BookingPopup> {
               const SizedBox(height: 20),
               const Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Select Payment Method:', style: TextStyle(fontSize: 16)),
+                child: Text(
+                  'Select Payment Method:',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
               ..._paymentMethods.map(
                 (method) => Column(
@@ -179,20 +186,22 @@ class _BookingPopupState extends State<BookingPopup> {
                       ),
                       value: method,
                       groupValue: _paymentMethod,
-                      onChanged: (value) => setState(() {
-                        _paymentMethod = value;
-                        _cardNumberController.clear();
-                        _mpesaNumberController.clear();
-                      }),
+                      onChanged:
+                          (value) => setState(() {
+                            _paymentMethod = value;
+                            _cardNumberController.clear();
+                            _mpesaNumberController.clear();
+                          }),
                     ),
-                    if ((_paymentMethod == 'Visa' || _paymentMethod == 'PayPal') &&
+                    if ((_paymentMethod == 'Visa' ||
+                            _paymentMethod == 'PayPal') &&
                         method == _paymentMethod)
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: TextField(
                           controller: _cardNumberController,
                           decoration: InputDecoration(
-                            labelText: '${method} Card Number',
+                            labelText: '$method Card Number',
                             hintText: 'Enter your card number',
                             prefixIcon: const Icon(Icons.credit_card),
                           ),
@@ -202,7 +211,7 @@ class _BookingPopupState extends State<BookingPopup> {
                     if (_paymentMethod == 'Mpesa' && method == 'Mpesa')
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: TextFormField(  
+                        child: TextFormField(
                           controller: _mpesaNumberController,
                           decoration: const InputDecoration(
                             labelText: 'Mpesa Phone Number',
@@ -219,13 +228,14 @@ class _BookingPopupState extends State<BookingPopup> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _isProcessingPayment ? null : _submitBooking,
-                child: _isProcessingPayment
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Confirm Booking'),
+                child:
+                    _isProcessingPayment
+                        ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                        : const Text('Confirm Booking'),
               ),
             ],
           ),

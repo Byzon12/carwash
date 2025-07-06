@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/screens/main/welcome/splash.dart';
 import 'package:flutter_application_1/utilites/provider.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import 'cart.dart';
+import 'api_service.dart';
 import 'home.dart';
 import 'screens/main/login screens/loginform.dart';
 
 void main() {
   runApp(const CarWashApp());
+  //
 }
 
 class CarWashApp extends StatelessWidget {
@@ -38,31 +41,34 @@ class CarWashApp extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: colorScheme.primary,
           foregroundColor: colorScheme.onPrimary,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           padding: const EdgeInsets.all(20),
           textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           minimumSize: const Size(300, 56),
         ),
       ),
-     cardTheme: CardThemeData(
-  color: colorScheme.surface,
-  elevation: 6,
-  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-  shadowColor: Colors.black.withOpacity(0.2),
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(16),
-  ),
-),
+      cardTheme: CardThemeData(
+        color: colorScheme.surface,
+        elevation: 6,
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        shadowColor: Colors.black.withOpacity(0.2),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
 
       listTileTheme: ListTileThemeData(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        tileColor: colorScheme.surfaceVariant,
+        tileColor: colorScheme.surfaceContainerHighest,
         iconColor: colorScheme.primary,
         textColor: colorScheme.onSurface,
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       ),
       textTheme: TextTheme(
-        titleLarge: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.bold),
+        titleLarge: TextStyle(
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.bold,
+        ),
         bodyMedium: TextStyle(color: colorScheme.onSurfaceVariant),
       ),
       splashColor: colorScheme.secondary.withOpacity(0.3),
@@ -70,9 +76,7 @@ class CarWashApp extends StatelessWidget {
     );
 
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => CartProvider()),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => CartProvider())],
       child: MaterialApp(
         title: 'Car Wash Booking',
         theme: theme,

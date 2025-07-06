@@ -3,7 +3,7 @@ import 'package:flutter_application_1/screens/main/login%20screens/account.dart'
 import 'package:flutter_application_1/screens/main/signupscreens/form.dart';
 
 class LoginForm extends StatelessWidget {
-  const LoginForm({Key? key}) : super(key: key);
+  const LoginForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +39,7 @@ class LoginForm extends StatelessWidget {
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
-           Navigator.of(context).pushReplacementNamed('/home');
-
+              Navigator.of(context).pushReplacementNamed('/home');
             },
             child: const Text("LOGIN"),
           ),
