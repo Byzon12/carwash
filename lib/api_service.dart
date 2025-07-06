@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 final storage = FlutterSecureStorage();
 const String baseUrl = 'http://127.0.0.1:8000/user/';
 
-//Function to fetch user registration data
+// Function to fetch user registration data
 Future<Map<String, dynamic>> registerUser({
   required String username,
   required String email,
